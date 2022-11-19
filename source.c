@@ -2,20 +2,24 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-void Backtrack(int *a, bool *b, int n, int m, int index) {
+int result(int a[], int n, int m, int index) {
+    if (m < a[n-1])
+        return -1;
+    if (m == 0)
+        return index;
+
+    int min = m + 1;
+    int arr;
     for (int i = 0; i < n; i++) {
-        if (b[i] && a[i] <= m) {
-            b[i] = false;
+        int k = m%a[i]+m/a[i];
 
-            if (m%a[i] == 0) {
-                printf("%d", index+m/a[i]);
-                exit(0);
-            }
-
-            Backtrack(a, b, n, m%a[i], index+m/a[i]);
-            b[i] = true;
+        if (k < min) {
+            min = k;
+            arr = a[i];
         }
     }
+
+    result(a, n, m%arr, index+m/arr);
 }
 
 void swap(int *a, int *b) {
@@ -54,16 +58,14 @@ int main() {
     scanf("%d %d", &n, &m);
 
     int a[n];
-    bool b[n];
+    int b[n];
     for (int i = 0; i < n; i++) {
         scanf("%d", &a[i]);
-        b[i] = true;
+        b[i] = m/a[i];
     }
     
     quickSort(a, 0, n-1);
 
-    Backtrack(a, b, n, m, 0);
-
-    printf("-1");
+    printf("%d", result(a, n, m, 0));
     return 0;
 }
