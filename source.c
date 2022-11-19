@@ -3,19 +3,21 @@
 #include <stdlib.h>
 
 int result(int a[], int n, int m, int index) {
-    if (m < a[n-1])
-        return -1;
     if (m == 0)
         return index;
+    if (m < a[n-1])
+        return -1;
 
     int min = m + 1;
     int arr;
     for (int i = 0; i < n; i++) {
-        int k = m%a[i]+m/a[i];
+        if (m >= a[i]) {
+            int k = m%a[i]+m/a[i];
 
-        if (k < min) {
-            min = k;
-            arr = a[i];
+            if (k < min) {
+                min = k;
+                arr = a[i];
+            }
         }
     }
 
@@ -58,10 +60,8 @@ int main() {
     scanf("%d %d", &n, &m);
 
     int a[n];
-    int b[n];
     for (int i = 0; i < n; i++) {
         scanf("%d", &a[i]);
-        b[i] = m/a[i];
     }
     
     quickSort(a, 0, n-1);
