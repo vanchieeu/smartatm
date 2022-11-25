@@ -1,43 +1,35 @@
 #include <iostream>
 using namespace std;
 
-int count = -1;
-
-void cinArr(int *a, bool *b, int n) {
-    for (int i = 0; i < n; i++) {
-        cin >> *(a+i);
-        b[i] = true;
-    }
-}
-
-void Backtrack(int *a, bool *b, int n, int m, int index) {
-    if (m == 0)
-        return;
-
-    for (int i = 0; i < n; i++) {
-        if (b[i] && a[i] <= m) {
-            b[i] = false;
-            
-            if (m%a[i] == 0 && index+m/a[i] < count)
-                count = index + m/a[i];
-            else if (m%a[i] == 0 && count == -1)
-                count = index + m/a[i];
-
-            Backtrack(a, b, n, m%a[i], index + m/a[i]);
-            b[i] = true;
-        }
-    }
-}
-
 int main() {
     int n, m;
     cin >> n >> m;
 
-    int a[n];
-    bool check[n];
-    cinArr(a, check, n);
+    int b[m+1];
+    for (int i = 0; i < m+1; i++) {
+        b[i] = 0;
+    }
 
-    Backtrack(a, check, n, m, 0);
-    cout << count;
+    int a[n];
+    for (int i = 0; i < n; i++) {
+        cin >> a[i];
+        b[a[i]]++;
+    }
+
+    for (int i = a[0]; i < m+1; i++) {
+        for (int j = 0; j < n; j++) {
+            if (i - a[j] < 0)
+                continue;
+            if (b[i] == 0 && b[i-a[j]] != 0)
+                b[i] = b[i-a[j]] + 1;
+            else if (b[i-a[j]] != 0 && b[i] != 0 && b[i-a[j]] +1 < b[i])
+                b[i] = b[i-a[j]] + 1;
+        }
+    }
+
+    if (b[m] != 0)
+        cout << b[m];
+    else 
+        cout << -1;
     return 0;
 }
